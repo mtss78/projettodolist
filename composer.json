@@ -1,0 +1,17 @@
+{
+    "name": "edw_2425/todolist",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/",
+            "config\\": "config/"
+        }
+    },
+    "authors": [
+        {
+            "name": "mathis"
+        }
+    ],
+    "require": {
+        "ext-pdo": "*"
+    }
+}
