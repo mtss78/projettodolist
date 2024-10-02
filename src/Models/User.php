@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use PDO;
+use Config\DataBase;
+
 class User
 {
     protected ?int $id;
@@ -17,6 +20,14 @@ class User
         $this->mail = $mail;
         $this->password = $password;
         $this->id_role = $id_role;
+    }
+
+    public function save(): bool
+    {
+        $pdo = DataBase::getConnection();
+        $sql = "INSERT INTO user (id,pseudo,mail,password,id_role) VALUES (?,?,?,?,?)";
+        $statement = $pdo->prepare($sql);
+        return $statement->execute([$this->id, $this->pseudo, $this->mail, $this->password, $this->id_role]);
     }
 
     public function getId(): ?int
