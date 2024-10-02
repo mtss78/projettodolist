@@ -30,6 +30,22 @@ class User
         return $statement->execute([$this->id, $this->pseudo, $this->mail, $this->password, $this->id_role]);
     }
 
+    public function login($mail)
+    {
+        $pdo = DataBase::getConnection();
+        $sql = "SELECT * FROM `user` WHERE `mail` = ?";
+        $statement = $pdo->prepare($sql);
+        $statement->execute([$mail]);
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        if ($row['id_role'] == 1) {
+            return new UserParent($row['id'], $row['pseudo'], $row['mail'], $row['password'], $row['id_role']);
+        } elseif ($row['id_role'] == 2) {
+            return new UserKid($row['id'], $row['pseudo'], $row['mail'], $row['password'], $row['id_role']);
+        } else {
+            return null;
+        }
+    }
+
     public function getId(): ?int
     {
         return $this->id;
