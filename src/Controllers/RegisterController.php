@@ -16,7 +16,7 @@ class RegisterController extends AbstractController
             $this->check('password', $_POST['password']);
             $this->check('idRole', $_POST['idRole']);
 
-            if (empty($arrayError)) {
+            if (empty($this->arrayError)) {
                 $pseudo = htmlspecialchars($_POST['pseudo']);
                 $mail = htmlspecialchars($_POST['mail']);
                 $password = htmlspecialchars($_POST['password']);
