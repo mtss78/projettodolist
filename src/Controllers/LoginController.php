@@ -17,7 +17,7 @@ class LoginController extends AbstractController
                 $mail = htmlspecialchars($_POST['mail']);
                 $password = htmlspecialchars($_POST['password']);
 
-                $user = new User(null, null, $mail, $password, null);
+                $user = new User(null, null, $mail, $password, null, null);
                 $responseGetUser = $user->login($mail);
 
 
@@ -30,6 +30,7 @@ class LoginController extends AbstractController
                             'mail' => $responseGetUser->getMail(),
                             'pseudo' => $responseGetUser->getPseudo(),
                             'idUser' => $responseGetUser->getId(),
+                            'score' => $responseGetUser->getScore(),
                             'idRole' => $responseGetUser->getId_role()
                         ];
                         $this->redirectToRoute('/');
