@@ -17,8 +17,8 @@ abstract class AbstractController
     public function isNotEmpty($value)
     {
         if (empty($_POST[$value])) {
-            $arrayError[$value] = "Le champ $value ne peut pas être vide.";
-            return $arrayError;
+            $this->arrayError[$value] = "Le champ $value ne peut pas être vide.";
+            return $this->arrayError;
         }
         return false;
     }
@@ -34,37 +34,37 @@ abstract class AbstractController
         switch ($nameInput) {
             case 'pseudo':
                 if (!preg_match($regexName, $value)) {
-                    $arrayError['pseudo'] = 'Merci de renseigner un pseudo correcte!';
+                    $this->arrayError['pseudo'] = 'Merci de renseigner un pseudo correcte!';
                 }
                 break;
             case 'mail':
                 if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-                    $arrayError['mail'] = 'Merci de renseigner un e-mail correcte!';
+                    $this->arrayError['mail'] = 'Merci de renseigner un e-mail correcte!';
                 }
                 break;
             case 'password':
                 if (!preg_match($regexPassword, $value)) {
-                    $arrayError['password'] = 'Merci de donné un mot de passe avec au minimum : 8 caractères, 1 majuscule, 1 miniscule, 1 caractère spécial!';
+                    $this->arrayError['password'] = 'Merci de donné un mot de passe avec au minimum : 8 caractères, 1 majuscule, 1 miniscule, 1 caractère spécial!';
                 }
                 break;
             case 'title':
                 if (!preg_match($regexTitle, $value)) {
-                    $arrayError['title'] = 'Merci de renseigner un titre correcte!';
+                    $this->arrayError['title'] = 'Merci de renseigner un titre correcte!';
                 }
                 break;
             case 'description':
                 if (!preg_match($regexTitle, $value)) {
-                    $arrayError['description'] = 'Merci de renseigner une description correcte!';
+                    $this->arrayError['description'] = 'Merci de renseigner une description correcte!';
                 }
                 break;
             case 'content':
                 if (!preg_match($regexContent, $value)) {
-                    $arrayError['content'] = 'Merci de renseigner un contenu correcte!';
+                    $this->arrayError['content'] = 'Merci de renseigner un contenu correcte!';
                 }
                 break;
             case 'idRole':
                 if (!preg_match($regexRole, $value)) {
-                    $arrayError['idRole'] = 'Merci de renseigner un role correcte!';
+                    $this->arrayError['idRole'] = 'Merci de renseigner un role correcte!';
                 }
                 break;
         }
@@ -75,6 +75,6 @@ abstract class AbstractController
         $this->isNotEmpty($nameInput);
         $value = htmlspecialchars($value);
         $this->checkFormat($nameInput, $value);
-        //return $arrayError;
+        return $this->arrayError;
     }
 }
