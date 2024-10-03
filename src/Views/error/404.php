@@ -1,5 +1,5 @@
 <?php
-    require_once(__DIR__ . "/partials/head.php");
+    require_once(__DIR__ . "/../partials/head.php");
 ?>
 
     <div class="error-img">
@@ -8,5 +8,5 @@
         <button type="button"><a href="/">Retour à l'accueil</a></button>
     </div> 
 <?php
-    include_once(__DIR__ . "/partials/footer.php");
+    include_once(__DIR__ . "/../partials/footer.php");
 ?>

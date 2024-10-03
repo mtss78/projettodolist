@@ -30,6 +30,8 @@ abstract class AbstractController
         $regexTitle = '/^[a-zA-Zà-üÀ-Ü0-9 #?!@$%^,.;&*-]{4,255}$/';
         $regexContent = '/^[a-zA-Zà-üÀ-Ü0-9 #?!@$%^,.;&*-]{4,}$/';
         $regexRole = '/^[12]$/';
+        $regexDateTime = '/^[2][0][2-3][0-9][-][0-1][0-9][-][0-3][0-9][T][0-2][0-9][:][0-6][0-9]$/';
+        $regexPoint = '/^[0-9]{1,}$/';
 
         switch ($nameInput) {
             case 'pseudo':
@@ -65,6 +67,21 @@ abstract class AbstractController
             case 'idRole':
                 if (!preg_match($regexRole, $value)) {
                     $this->arrayError['idRole'] = 'Merci de renseigner un role correcte!';
+                }
+                break;
+            case 'start_task':
+                if (!preg_match($regexDateTime, $value)) {
+                    $this->arrayError['start_task'] = 'Merci de renseigner une date et heure correcte!';
+                }
+                break;
+            case 'stop_task':
+                if (!preg_match($regexDateTime, $value)) {
+                    $this->arrayError['stop_task'] = 'Merci de renseigner une date et heure correcte!';
+                }
+                break;
+            case 'point':
+                if (!preg_match($regexPoint, $value)) {
+                    $this->arrayError['point'] = 'Merci de renseigner un nombre de point/s correcte!';
                 }
                 break;
         }

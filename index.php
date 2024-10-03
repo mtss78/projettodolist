@@ -13,5 +13,6 @@ $router->addRoute('/', 'HomeController', 'index');
 $router->addRoute('/register', 'RegisterController', 'index');
 $router->addRoute('/login', 'LoginController', 'index');
 $router->addRoute('/logout', 'LogoutController', 'logout');
+$router->addRoute('/addTask', 'TaskController', 'createTask');
 
 $router->handleRequest();
