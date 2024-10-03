@@ -30,6 +30,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/logout">Déconnexion</a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/addTask">Tâches</a>
+                        </li>
+
                     <?php
                     } else {
                     ?>
