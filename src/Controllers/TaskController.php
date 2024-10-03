@@ -12,12 +12,10 @@ class TaskController extends AbstractController
         if (isset($_SESSION['user']) && $_SESSION['user']['idRole'] == 1) {
 
             if (isset($_POST['title'])) {
-                //$stopTask = date_format($_POST['stop_task'], "Y/m/d H:i:s");
                 $this->check('title', $_POST['title']);
                 $this->check('start_task', $_POST['start_task']);
                 $this->check('stop_task', $_POST['stop_task']);
                 $this->check('point', $_POST['point']);
-
 
                 if (empty($this->arrayError)) {
                     $title = htmlspecialchars($_POST['title']);

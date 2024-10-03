@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Config\DataBase;
+use PDO;
 
 class Task
 {
@@ -33,6 +34,26 @@ class Task
         $sql = "INSERT INTO `task` (`id`, `title`, `content`, `creation_date`, `start_task`, `stop_task`, `point`, `id_user`) VALUES (?,?,?,?,?,?,?,?)";
         $statement = $pdo->prepare($sql);
         return $statement->execute([$this->id, $this->title, $this->content, $this->creation_date, $this->start_task, $this->stop_task, $this->point, $this->id_user]);
+    }
+
+    public function unassignedFutureTask(): array
+    {
+        $pdo = DataBase::getConnection();
+        $sql = "SELECT `task`.`id`, `task`.`title`, `task`.`start_task`, `task`.`stop_task`
+            FROM `todo`
+            RIGHT JOIN `task` ON `todo`.`id_task` = `task`.`id`
+            WHERE `task`.`stop_task` >= CURDATE() 
+            AND `todo`.`id_user` IS NULL 
+            ORDER BY `task`.`start_task` ASC";
+        $statement = $pdo->prepare($sql);
+        $statement->execute();
+        $resultFetch = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $tasks = [];
+        foreach ($resultFetch as $row) {
+            $task = new Task($row['id'], $row['title'], null, null, $row['start_task'], $row['stop_task'], null, null);
+            $tasks[] = $task;
+        }
+        return $tasks;
     }
 
     public function getId(): ?int
