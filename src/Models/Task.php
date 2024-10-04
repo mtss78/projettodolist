@@ -15,8 +15,9 @@ class Task
     protected ?string $stop_task;
     protected ?int $point;
     protected ?int $id_user;
+    protected ?string $pseudo;
 
-    public function __construct(?int $id, ?string $title, ?string $content, ?string $creation_date, ?string $start_task, ?string $stop_task, ?int $point, ?int $id_user)
+    public function __construct(?int $id, ?string $title, ?string $content, ?string $creation_date, ?string $start_task, ?string $stop_task, ?int $point, ?int $id_user, ?string $pseudo)
     {
         $this->id = $id;
         $this->title = $title;
@@ -26,6 +27,7 @@ class Task
         $this->stop_task = $stop_task;
         $this->point = $point;
         $this->id_user = $id_user;
+        $this->pseudo = $pseudo;
     }
 
     public function addTask(): bool
@@ -50,7 +52,28 @@ class Task
         $resultFetch = $statement->fetchAll(PDO::FETCH_ASSOC);
         $tasks = [];
         foreach ($resultFetch as $row) {
-            $task = new Task($row['id'], $row['title'], null, null, $row['start_task'], $row['stop_task'], null, null);
+            $task = new Task($row['id'], $row['title'], null, null, $row['start_task'], $row['stop_task'], null, null, null);
+            $tasks[] = $task;
+        }
+        return $tasks;
+    }
+
+    public function assignedFutureTask()
+    {
+        $pdo = DataBase::getConnection();
+        $sql = "SELECT `task`.`id`, `task`.`title`, `task`.`start_task`, `task`.`stop_task`, `user`.`pseudo`
+            FROM `todo`
+            RIGHT JOIN `task` ON `todo`.`id_task` = `task`.`id`
+            LEFT JOIN `user` ON `todo`.`id_user` = `user`.`id`
+            WHERE `task`.`stop_task` >= CURDATE() 
+            AND `todo`.`id_user` IS NOT NULL 
+            ORDER BY `task`.`start_task` ASC";
+        $statement = $pdo->prepare($sql);
+        $statement->execute();
+        $resultFetch = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $tasks = [];
+        foreach ($resultFetch as $row) {
+            $task = new Task($row['id'], $row['title'], null, null, $row['start_task'], $row['stop_task'], null, null, $row['pseudo']);
             $tasks[] = $task;
         }
         return $tasks;
@@ -92,6 +115,11 @@ class Task
     public function getIdUser(): ?int
     {
         return $this->id_user;
+    }
+
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
     }
 
     public function setId(?int $id): static
@@ -139,6 +167,12 @@ class Task
     public function setIdUser(?int $id_user): static
     {
         $this->id_user = $id_user;
+        return $this;
+    }
+
+    public function setPseudo(?string $pseudo): static
+    {
+        $this->pseudo = $pseudo;
         return $this;
     }
 }
