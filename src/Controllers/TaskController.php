@@ -26,7 +26,7 @@ class TaskController extends AbstractController
                     $creation_date = date('Y-m-d H:i:s');
                     $id_user = $_SESSION['user']['idUser'];
 
-                    $task = new Task(null, $title, $content, $creation_date, $start_task, $stop_task, $point, $id_user);
+                    $task = new Task(null, $title, $content, $creation_date, $start_task, $stop_task, $point, $id_user, null);
 
                     $task->addTask();
                     $this->redirectToRoute('/');
