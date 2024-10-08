@@ -15,9 +15,11 @@ class Task
     protected ?string $stop_task;
     protected ?int $point;
     protected ?int $id_user;
+    protected ?string $status;
     protected ?string $pseudo;
 
-    public function __construct(?int $id, ?string $title, ?string $content, ?string $creation_date, ?string $start_task, ?string $stop_task, ?int $point, ?int $id_user, ?string $pseudo)
+
+    public function __construct(?int $id, ?string $title, ?string $content, ?string $creation_date, ?string $start_task, ?string $stop_task, ?int $point, ?int $id_user, ?string $status, ?string $pseudo)
     {
         $this->id = $id;
         $this->title = $title;
@@ -27,6 +29,7 @@ class Task
         $this->stop_task = $stop_task;
         $this->point = $point;
         $this->id_user = $id_user;
+        $this->status = $status;
         $this->pseudo = $pseudo;
     }
 
@@ -52,7 +55,7 @@ class Task
         $resultFetch = $statement->fetchAll(PDO::FETCH_ASSOC);
         $tasks = [];
         foreach ($resultFetch as $row) {
-            $task = new Task($row['id'], $row['title'], null, null, $row['start_task'], $row['stop_task'], null, null, null);
+            $task = new Task($row['id'], $row['title'], null, null, $row['start_task'], $row['stop_task'], null, null, null, null);
             $tasks[] = $task;
         }
         return $tasks;
@@ -73,10 +76,50 @@ class Task
         $resultFetch = $statement->fetchAll(PDO::FETCH_ASSOC);
         $tasks = [];
         foreach ($resultFetch as $row) {
-            $task = new Task($row['id'], $row['title'], null, null, $row['start_task'], $row['stop_task'], null, null, $row['pseudo']);
+            $task = new Task($row['id'], $row['title'], null, null, $row['start_task'], $row['stop_task'], null, null, null, $row['pseudo']);
             $tasks[] = $task;
         }
         return $tasks;
+    }
+
+    public function getTaskById()
+    {
+        $pdo = DataBase::getConnection();
+        $sql = "SELECT `task`.`id`, `task`.`title`, `task`.`content`, `task`.`creation_date`, `task`.`start_task`, `task`.`stop_task`, `task`.`point`, `task`.`id_user`, `todo`.`status`, `user`.`pseudo` FROM `task` LEFT JOIN `todo` ON `task`.`id` = `todo`.`id_task` LEFT JOIN `user` ON `todo`.`id_user` = `user`.`id` WHERE `task`.`id` = ?";
+        $statement = $pdo->prepare($sql);
+        $statement->execute([$this->id]);
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            return new Task($row['id'], $row['title'], $row['content'], $row['creation_date'], $row['start_task'], $row['stop_task'], $row['point'], $row['id_user'], $row['status'], $row['pseudo']);
+        } else {
+            return null;
+        }
+    }
+
+    public function updateTask()
+    {
+        $pdo = DataBase::getConnection();
+        $sql = "UPDATE `task` 
+        SET `title` = ?, `content` = ?, `start_task` = ?, `stop_task` = ?, `point` = ?
+        WHERE `task`.`id` = ?";
+        $statement = $pdo->prepare($sql);
+        return $statement->execute([$this->title, $this->content, $this->start_task, $this->stop_task, $this->point, $this->id]);
+    }
+
+    public function deleteTask()
+    {
+        $pdo = DataBase::getConnection();
+        $sql = 'DELETE FROM `task` WHERE `id` = ?';
+        $statement = $pdo->prepare($sql);
+        return $statement->execute([$this->id]);
+    }
+
+    public function deleteTodo()
+    {
+        $pdo = DataBase::getConnection();
+        $sql = "DELETE FROM `todo` WHERE `id_task` = ?";
+        $statement = $pdo->prepare($sql);
+        return $statement->execute([$this->id]);
     }
 
     public function getId(): ?int
@@ -115,6 +158,11 @@ class Task
     public function getIdUser(): ?int
     {
         return $this->id_user;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
     }
 
     public function getPseudo(): ?string
@@ -167,6 +215,12 @@ class Task
     public function setIdUser(?int $id_user): static
     {
         $this->id_user = $id_user;
+        return $this;
+    }
+
+    public function setStatus(?string $status)
+    {
+        $this->status = $status;
         return $this;
     }
 
